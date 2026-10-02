@@ -1,0 +1,152 @@
+{
+ "grid": [
+  {
+   "abc": "A",
+   "xyz": "X",
+   "series": 13,
+   "required": 634.8,
+   "naive": 274.8,
+   "supply_share": 0.812
+  },
+  {
+   "abc": "A",
+   "xyz": "Y",
+   "series": 143,
+   "required": 2815.7,
+   "naive": 1164.9,
+   "supply_share": 0.568
+  },
+  {
+   "abc": "A",
+   "xyz": "Z",
+   "series": 41,
+   "required": 783.3,
+   "naive": 248.0,
+   "supply_share": 0.364
+  },
+  {
+   "abc": "B",
+   "xyz": "Y",
+   "series": 58,
+   "required": 427.7,
+   "naive": 215.4,
+   "supply_share": 0.52
+  },
+  {
+   "abc": "B",
+   "xyz": "Z",
+   "series": 40,
+   "required": 322.1,
+   "naive": 134.6,
+   "supply_share": 0.364
+  },
+  {
+   "abc": "C",
+   "xyz": "Y",
+   "series": 13,
+   "required": 52.3,
+   "naive": 34.0,
+   "supply_share": 0.444
+  },
+  {
+   "abc": "C",
+   "xyz": "Z",
+   "series": 14,
+   "required": 67.6,
+   "naive": 39.8,
+   "supply_share": 0.349
+  }
+ ],
+ "worst": [
+  {
+   "seller": "93dc8770",
+   "category": "watches_gifts",
+   "abc": "A",
+   "mean": 20.667,
+   "sd": 25.204,
+   "late": 10.0,
+   "ss": 10.0
+  },
+  {
+   "seller": "6a8b085f",
+   "category": "auto",
+   "abc": "B",
+   "mean": 14.248,
+   "sd": 16.474,
+   "late": 8.0,
+   "ss": 12.0
+  },
+  {
+   "seller": "0b35c634",
+   "category": "construction_tools_construction",
+   "abc": "A",
+   "mean": 17.351,
+   "sd": 15.635,
+   "late": 12.0,
+   "ss": 16.0
+  },
+  {
+   "seller": "7ea5bfa6",
+   "category": "baby",
+   "abc": "A",
+   "mean": 12.787,
+   "sd": 15.619,
+   "late": 5.0,
+   "ss": 16.0
+  },
+  {
+   "seller": "adbc2665",
+   "category": "baby",
+   "abc": "B",
+   "mean": 16.638,
+   "sd": 15.27,
+   "late": 12.0,
+   "ss": 7.0
+  },
+  {
+   "seller": "2c9e548b",
+   "category": "stationery",
+   "abc": "B",
+   "mean": 13.818,
+   "sd": 14.62,
+   "late": 17.0,
+   "ss": 20.0
+  },
+  {
+   "seller": "ad420dd0",
+   "category": "health_beauty",
+   "abc": "B",
+   "mean": 11.644,
+   "sd": 13.878,
+   "late": 4.0,
+   "ss": 5.0
+  },
+  {
+   "seller": "4a3ca931",
+   "category": "home_confort",
+   "abc": "A",
+   "mean": 15.146,
+   "sd": 13.313,
+   "late": 11.0,
+   "ss": 18.0
+  },
+  {
+   "seller": "abe42c5d",
+   "category": "health_beauty",
+   "abc": "A",
+   "mean": 14.5,
+   "sd": 13.052,
+   "late": 15.0,
+   "ss": 8.0
+  },
+  {
+   "seller": "0691148a",
+   "category": "sports_leisure",
+   "abc": "B",
+   "mean": 14.275,
+   "sd": 12.574,
+   "late": 5.0,
+   "ss": 6.0
+  }
+ ]
+}

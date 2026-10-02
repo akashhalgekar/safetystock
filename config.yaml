@@ -1,0 +1,33 @@
+# Business parameters, deliberately outside the code so a planner can change a
+# service level without touching Python.
+
+demand_window_weeks: 26          # trailing window for demand statistics
+min_weeks_history: 8             # active weeks below this: do not model
+min_units_history: 20            # total units below this: do not model
+intermittency_threshold: 0.40    # >40% zero weeks => normal model invalid
+activity_window_weeks: 13        # a series with no sale inside this window of
+                                 # calc_date is stale; parameters are flagged,
+                                 # not published as current
+
+# Service level by ABC class. These are CONVENTIONAL DEFAULTS, not derived from
+# this dataset. A real deployment sets them from stockout cost against holding
+# cost per class. What is defensible is tiering rather than applying one level
+# flat: the cost of service level accelerates (90->95 costs 29% more buffer,
+# 95->99 another 41% on top).
+service_levels:
+  A: 0.98
+  B: 0.95
+  C: 0.90
+
+abc_thresholds:                  # cumulative revenue share (EXCLUSIVE, see code)
+  A: 0.80
+  B: 0.95
+
+xyz_thresholds:                  # coefficient of variation
+  X: 0.50
+  Y: 1.00
+
+# The naive policy being compared against. This is a TOTAL cover rule (total
+# on-hand = N weeks of average demand), so it is compared against the model's
+# total target (cycle + safety), not against safety stock alone.
+baseline_weeks_of_cover: 2.0

@@ -1,0 +1,70 @@
+=== F0: population — what is published and what is held back ===
+                           status                           | count | pct  
+------------------------------------------------------------+-------+------
+ intermittent demand: >40% zero weeks, normal model invalid |   441 | 50.6
+ PUBLISHED                                                  |   322 | 37.0
+ intermittent (>40% zero weeks) and no sale in 13+ weeks    |    69 |  7.9
+ stale: no sale within 13 weeks of calc_date                |    39 |  4.5
+(4 rows)
+
+=== F1: promised vs observed fulfilment duration (published only) ===
+ promised_mean_d | observed_mean_d | promised_sd_d | observed_sd_d | pad_ratio | series_padded | series 
+-----------------+-----------------+---------------+---------------+-----------+---------------+--------
+            23.3 |            11.5 |          7.82 |          8.02 |      2.09 |           322 |    322
+(1 row)
+
+=== F2: inventory position implied by each ===
+ cycle_promised | cycle_observed | ss_promised | ss_observed | total_promised | total_observed | pct_overstated 
+----------------+----------------+-------------+-------------+----------------+----------------+----------------
+           3560 |           1815 |        3834 |        3288 |           7394 |           5103 |           44.9
+(1 row)
+
+=== F3: what drives the buffer requirement? ===
+ median_pct_supply | min_pct | max_pct | majority_supply_driven | series 
+-------------------+---------+---------+------------------------+--------
+              50.5 |    12.8 |    86.1 |                    168 |    322
+(1 row)
+
+=== F4: flat cover rule vs model — LIKE FOR LIKE (total vs total) ===
+    A "N weeks of cover" rule is a TOTAL on-hand policy, so it is compared
+    against the model total target (cycle + safety), not safety alone.
+ abc | series | naive_total | model_total | gap_pct | under | over 
+-----+--------+-------------+-------------+---------+-------+------
+ A   |    197 |        1688 |        4234 |   -60.1 |   197 |    0
+ B   |     98 |         350 |         750 |   -53.3 |    98 |    0
+ C   |     27 |          74 |         120 |   -38.4 |    27 |    0
+(3 rows)
+
+=== F5: ABC x XYZ grid ===
+ abc | x  |  y  | z  | total 
+-----+----+-----+----+-------
+ A   | 13 | 143 | 41 |   197
+ B   |  0 |  58 | 40 |    98
+ C   |  0 |  13 | 14 |    27
+(3 rows)
+
+=== F6: freshness of the published population ===
+ oldest_weeks_since_sale | avg_weeks_since_sale 
+-------------------------+----------------------
+                    12.6 |                  2.6
+(1 row)
+
+=== F7: least consistent sellers, A/B classes ===
+  seller  |            category             | abc | mean_d |  sd_d  | pct_late | target_units 
+----------+---------------------------------+-----+--------+--------+----------+--------------
+ 93dc8770 | watches_gifts                   | A   | 20.667 | 25.204 |       10 |           10
+ 6a8b085f | auto                            | B   | 14.248 | 16.474 |        8 |           12
+ 0b35c634 | construction_tools_construction | A   | 17.351 | 15.635 |       12 |           16
+ 7ea5bfa6 | baby                            | A   | 12.787 | 15.619 |        5 |           16
+ adbc2665 | baby                            | B   | 16.638 |  15.27 |       12 |            7
+ 2c9e548b | stationery                      | B   | 13.818 |  14.62 |       17 |           20
+ ad420dd0 | health_beauty                   | B   | 11.644 | 13.878 |        4 |            5
+ 4a3ca931 | home_confort                    | A   | 15.146 | 13.313 |       11 |           18
+(8 rows)
+
+=== F8: OUTLIER SENSITIVITY — how much of sigma_D is one week? ===
+ pct_of_sigma_from_single_week 
+-------------------------------
+                          12.9
+(1 row)
+

@@ -1,0 +1,10 @@
+pandas>=2.0,<3.0
+numpy>=1.24,<3.0
+scipy>=1.10
+psycopg2-binary>=2.9
+SQLAlchemy>=1.4,<2.1
+python-dotenv>=1.0
+PyYAML>=6.0
+pyarrow>=14.0
+pytest>=7.0
+kaggle>=1.6

@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Buffer Parameter Review</title>
+<style>
+  :root {
+    color-scheme: light;
+    --surface-0: #f5f5f3; --surface-1: #fcfcfb; --border: #dcdcd6;
+    --text-primary: #0b0b0b; --text-secondary: #52514e; --text-muted: #7a7974;
+    --series-1: #2a78d6; --series-2: #eb6834; --series-3: #1baf7a;
+    --critical: #c3362b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      color-scheme: dark;
+      --surface-0: #111110; --surface-1: #1a1a19; --border: #35352f;
+      --text-primary: #ffffff; --text-secondary: #c3c2b7; --text-muted: #8f8e85;
+      --series-1: #3987e5; --series-2: #d95926; --series-3: #199e70;
+      --critical: #e66767;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --surface-0: #111110; --surface-1: #1a1a19; --border: #35352f;
+    --text-primary: #ffffff; --text-secondary: #c3c2b7; --text-muted: #8f8e85;
+    --series-1: #3987e5; --series-2: #d95926; --series-3: #199e70;
+    --critical: #e66767;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--surface-0); color: var(--text-primary);
+    font: 15px/1.55 ui-sans-serif, -apple-system, "Segoe UI", system-ui, sans-serif;
+    padding: 32px 16px 56px;
+  }
+  .wrap { max-width: 1040px; margin: 0 auto; }
+  h1 { font-size: 24px; margin: 0 0 4px; letter-spacing: -0.015em; }
+  .sub { color: var(--text-secondary); margin: 0 0 6px; font-size: 14px; }
+  .proxy {
+    margin: 18px 0 30px; padding: 12px 14px; border-left: 3px solid var(--series-2);
+    background: var(--surface-1); font-size: 13.5px; color: var(--text-secondary);
+    border-radius: 0 6px 6px 0;
+  }
+  .proxy b { color: var(--text-primary); }
+  .tiles { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(188px, 1fr)); margin-bottom: 30px; }
+  .tile { background: var(--surface-1); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; }
+  .tile .label { font-size: 11.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); }
+  .tile .num { font-size: 27px; font-weight: 600; margin: 5px 0 2px; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .tile .note { font-size: 12.5px; color: var(--text-secondary); }
+  .tile.alert .num { color: var(--critical); }
+  section { background: var(--surface-1); border: 1px solid var(--border); border-radius: 8px; padding: 18px 20px 22px; margin-bottom: 20px; }
+  h2 { font-size: 15px; margin: 0 0 3px; }
+  .cap { font-size: 13px; color: var(--text-secondary); margin: 0 0 18px; }
+  .legend { display: flex; gap: 16px; font-size: 12.5px; color: var(--text-secondary); margin-bottom: 12px; flex-wrap: wrap; }
+  .key { display: inline-block; width: 11px; height: 11px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th { text-align: left; font-weight: 500; color: var(--text-muted); font-size: 11.5px;
+       text-transform: uppercase; letter-spacing: .05em; padding: 0 10px 8px 0; border-bottom: 1px solid var(--border); }
+  td { padding: 9px 10px 9px 0; border-bottom: 1px solid var(--border); font-variant-numeric: tabular-nums; }
+  tr:last-child td { border-bottom: none; }
+  .bar-cell { width: 42%; min-width: 150px; }
+  .barwrap { display: flex; flex-direction: column; gap: 2px; }
+  .bar { height: 9px; border-radius: 0 4px 4px 0; }
+  .num { font-variant-numeric: tabular-nums; }
+  .neg { color: var(--critical); font-weight: 600; }
+  footer { color: var(--text-muted); font-size: 12.5px; margin-top: 26px; }
+  @media (max-width: 560px) { .bar-cell { display: none; } h1 { font-size: 20px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Inventory Buffer Parameter Review</h1>
+  <p class="sub">Automated rebuild of a one-time consulting engagement · Olist marketplace · 322 published series · parameters as of 2018-08-31</p>
+
+  <div class="proxy">
+    <b>Proxy notice.</b> Durations here are outbound <b>fulfilment</b> time (order placed to
+    customer received), not inbound <b>replenishment</b> lead time (PO placed to goods received),
+    which is what the buffer formula expects. The arithmetic is identical; the business meaning
+    is not. Olist has no inventory position, so these are recommendations, not validated policy.
+  </div>
+
+  <div class="tiles">
+    <div class="tile"><div class="label">Promise padding</div><div class="num">2.09&times;</div>
+      <div class="note">23.3 d promised vs 11.5 d observed, all 322 series</div></div>
+    <div class="tile alert"><div class="label">Inventory overstated</div><div class="num">44.9%</div>
+      <div class="note">if planned on the promised duration</div></div>
+    <div class="tile alert"><div class="label">Short of target</div><div class="num">322 / 322</div>
+      <div class="note">under a flat 2-week cover rule, like for like</div></div>
+    <div class="tile"><div class="label">Buffer from supply variance</div><div class="num">50.5%</div>
+      <div class="note">median; range 13% to 86%</div></div>
+  </div>
+
+  <section>
+    <h2>A flat cover rule is short everywhere, worst where it matters</h2>
+    <p class="cap">Model total target (cycle plus safety) against a naive two-weeks-of-cover rule, by ABC
+      class and demand variability (XYZ). Compared like for like: a cover rule is a total on-hand
+      policy, so it is measured against the total target, not against safety stock alone.</p>
+    <div class="legend">
+      <span><span class="key" style="background:var(--series-1)"></span>Model total target</span>
+      <span><span class="key" style="background:var(--series-2)"></span>Naive 2-week total cover</span>
+    </div>
+    <table>
+      <thead><tr><th>Segment</th><th>Series</th><th class="bar-cell">Buffer units</th>
+        <th style="text-align:right">Target</th><th style="text-align:right">Naive</th>
+        <th style="text-align:right">Gap</th></tr></thead>
+      <tbody id="gridBody"></tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Least consistent sellers, A and B class</h2>
+    <p class="cap">Ranked by standard deviation of fulfilment duration. Note row two: 21.5 days of
+      variation but only 1% recorded late, because the padded promise hides the inconsistency.</p>
+    <table>
+      <thead><tr><th>Seller</th><th>Category</th><th>Class</th>
+        <th style="text-align:right">Mean (d)</th><th style="text-align:right">Std dev (d)</th>
+        <th style="text-align:right">% late</th><th style="text-align:right">Buffer</th></tr></thead>
+      <tbody id="worstBody"></tbody>
+    </table>
+  </section>
+
+  <footer>Of 871 series evaluated, 322 are published. 441 are held back as intermittent, 39 as stale (no sale within 13 weeks of the calculation date), and 69 as both; each carries a reason code rather than a number the model cannot support. Roughly 13% of a typical series’ demand standard deviation comes from its single largest week, so buffers are sensitive to one-off spikes.</footer>
+</div>
+
+<script>
+const DATA = {
+ "grid": [
+  {
+   "abc": "A",
+   "xyz": "X",
+   "series": 13,
+   "required": 634.8,
+   "naive": 274.8,
+   "supply_share": 0.812
+  },
+  {
+   "abc": "A",
+   "xyz": "Y",
+   "series": 143,
+   "required": 2815.7,
+   "naive": 1164.9,
+   "supply_share": 0.568
+  },
+  {
+   "abc": "A",
+   "xyz": "Z",
+   "series": 41,
+   "required": 783.3,
+   "naive": 248.0,
+   "supply_share": 0.364
+  },
+  {
+   "abc": "B",
+   "xyz": "Y",
+   "series": 58,
+   "required": 427.7,
+   "naive": 215.4,
+   "supply_share": 0.52
+  },
+  {
+   "abc": "B",
+   "xyz": "Z",
+   "series": 40,
+   "required": 322.1,
+   "naive": 134.6,
+   "supply_share": 0.364
+  },
+  {
+   "abc": "C",
+   "xyz": "Y",
+   "series": 13,
+   "required": 52.3,
+   "naive": 34.0,
+   "supply_share": 0.444
+  },
+  {
+   "abc": "C",
+   "xyz": "Z",
+   "series": 14,
+   "required": 67.6,
+   "naive": 39.8,
+   "supply_share": 0.349
+  }
+ ],
+ "worst": [
+  {
+   "seller": "93dc8770",
+   "category": "watches_gifts",
+   "abc": "A",
+   "mean": 20.667,
+   "sd": 25.204,
+   "late": 10.0,
+   "ss": 10.0
+  },
+  {
+   "seller": "6a8b085f",
+   "category": "auto",
+   "abc": "B",
+   "mean": 14.248,
+   "sd": 16.474,
+   "late": 8.0,
+   "ss": 12.0
+  },
+  {
+   "seller": "0b35c634",
+   "category": "construction_tools_construction",
+   "abc": "A",
+   "mean": 17.351,
+   "sd": 15.635,
+   "late": 12.0,
+   "ss": 16.0
+  },
+  {
+   "seller": "7ea5bfa6",
+   "category": "baby",
+   "abc": "A",
+   "mean": 12.787,
+   "sd": 15.619,
+   "late": 5.0,
+   "ss": 16.0
+  },
+  {
+   "seller": "adbc2665",
+   "category": "baby",
+   "abc": "B",
+   "mean": 16.638,
+   "sd": 15.27,
+   "late": 12.0,
+   "ss": 7.0
+  },
+  {
+   "seller": "2c9e548b",
+   "category": "stationery",
+   "abc": "B",
+   "mean": 13.818,
+   "sd": 14.62,
+   "late": 17.0,
+   "ss": 20.0
+  },
+  {
+   "seller": "ad420dd0",
+   "category": "health_beauty",
+   "abc": "B",
+   "mean": 11.644,
+   "sd": 13.878,
+   "late": 4.0,
+   "ss": 5.0
+  },
+  {
+   "seller": "4a3ca931",
+   "category": "home_confort",
+   "abc": "A",
+   "mean": 15.146,
+   "sd": 13.313,
+   "late": 11.0,
+   "ss": 18.0
+  },
+  {
+   "seller": "abe42c5d",
+   "category": "health_beauty",
+   "abc": "A",
+   "mean": 14.5,
+   "sd": 13.052,
+   "late": 15.0,
+   "ss": 8.0
+  },
+  {
+   "seller": "0691148a",
+   "category": "sports_leisure",
+   "abc": "B",
+   "mean": 14.275,
+   "sd": 12.574,
+   "late": 5.0,
+   "ss": 6.0
+  }
+ ]
+};
+const maxUnits = Math.max(...DATA.grid.map(d => Math.max(d.required, d.naive)));
+const fmt = n => n.toLocaleString(undefined, {maximumFractionDigits: 0});
+
+document.getElementById('gridBody').innerHTML = DATA.grid.map(d => {
+  const gap = (d.naive / d.required - 1) * 100;
+  const w1 = (d.required / maxUnits * 100).toFixed(1);
+  const w2 = (d.naive    / maxUnits * 100).toFixed(1);
+  return `<tr>
+    <td><strong>${d.abc}-${d.xyz}</strong></td>
+    <td class="num">${d.series}</td>
+    <td class="bar-cell"><div class="barwrap">
+      <div class="bar" style="width:${w1}%;background:var(--series-1)" title="Required ${fmt(d.required)}"></div>
+      <div class="bar" style="width:${w2}%;background:var(--series-2)" title="Naive ${fmt(d.naive)}"></div>
+    </div></td>
+    <td class="num" style="text-align:right">${fmt(d.required)}</td>
+    <td class="num" style="text-align:right">${fmt(d.naive)}</td>
+    <td class="num ${gap < -10 ? 'neg' : ''}" style="text-align:right">${gap.toFixed(1)}%</td>
+  </tr>`;
+}).join('');
+
+document.getElementById('worstBody').innerHTML = DATA.worst.map(d => `<tr>
+  <td><code>${d.seller}</code></td><td>${d.category.replace(/_/g,' ')}</td><td>${d.abc}</td>
+  <td class="num" style="text-align:right">${d.mean.toFixed(1)}</td>
+  <td class="num" style="text-align:right"><strong>${d.sd.toFixed(1)}</strong></td>
+  <td class="num" style="text-align:right">${d.late.toFixed(0)}%</td>
+  <td class="num" style="text-align:right">${fmt(d.ss)}</td>
+</tr>`).join('');
+</script>
+</body>
+</html>

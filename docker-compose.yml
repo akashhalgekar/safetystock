@@ -1,0 +1,19 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: ss-postgres
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: safetystock
+    ports: ["5432:5432"]          # change to "5433:5432" if 5432 is taken locally
+    volumes: ["ss-pgdata:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      retries: 10
+    networks: [ssnet]
+volumes:
+  ss-pgdata:
+networks:
+  ssnet:
+    name: ssnet

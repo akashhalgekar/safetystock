@@ -1,0 +1,56 @@
+# ---------------------------------------------------------------------------
+# INPUT MAPPING — point this pipeline at your own data without renaming it.
+#
+# The engine needs five facts. Everything else in your extract is ignored.
+# Change the values on the right to whatever your columns are actually called;
+# leave the keys on the left alone.
+#
+# Run `python scripts/check_input.py` after editing. It tells you what is
+# missing, what will not parse, and how much of the data survives the filters,
+# BEFORE you load anything.
+# ---------------------------------------------------------------------------
+
+orders:
+  file: olist_orders_dataset.csv
+  columns:
+    order_id:        order_id                        # REQUIRED unique order key
+    status:          order_status                    # REQUIRED
+    ordered_at:      order_purchase_timestamp        # REQUIRED  clock starts
+    received_at:     order_delivered_customer_date   # REQUIRED  clock stops
+    promised_at:     order_estimated_delivery_date   # REQUIRED  the quoted date
+    dispatched_at:   order_delivered_carrier_date    # optional, sanity check only
+  # Which value of `status` means the order actually completed.
+  completed_status: delivered
+
+order_lines:
+  file: olist_order_items_dataset.csv
+  columns:
+    order_id:        order_id      # REQUIRED  joins to orders
+    line_no:         order_item_id # REQUIRED  one row per unit
+    product_id:      product_id    # REQUIRED
+    supplier_id:     seller_id     # REQUIRED  whoever you buy from
+    unit_value:      price         # REQUIRED  used for ABC ranking
+    # quantity:      ORDER_QTY     # STRONGLY RECOMMENDED. Units on the line.
+    #                              # Omitted here because Olist writes one row
+    #                              # per unit. If YOUR lines carry a quantity
+    #                              # and you leave this out, every line counts
+    #                              # as 1 unit and demand is understated.
+
+products:
+  file: olist_products_dataset.csv
+  columns:
+    product_id:      product_id             # REQUIRED
+    category:        product_category_name  # REQUIRED  the grouping level
+
+suppliers:                                  # optional file; omit if you have none
+  file: olist_sellers_dataset.csv
+  columns:
+    supplier_id:     seller_id
+    city:            seller_city
+    region:          seller_state
+
+category_labels:                            # optional translation table
+  file: product_category_name_translation.csv
+  columns:
+    category:        product_category_name
+    label:           product_category_name_english

@@ -1,0 +1,5 @@
+step,reason,rows_removed,recorded_at
+staging.orders,status is not the completed status,2963,2026-10-02 10:01:31.717498
+staging.orders,status=delivered but delivery timestamp null,8,2026-10-02 10:01:31.717498
+staging.orders,delivered before dispatched (timestamp violation),23,2026-10-02 10:01:31.717498
+staging.orders,purchased before 2017-01-01 (platform launch artefact),267,2026-10-02 10:01:31.717498

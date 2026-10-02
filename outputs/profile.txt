@@ -1,0 +1,32 @@
+=== 1. Order status distribution ===
+psql:/home/claude/safetystock/sql/003_profile_raw.sql:9: ERROR:  column "order_status" does not exist
+LINE 1: SELECT order_status, count(*) AS n,
+               ^
+=== 2. Null timestamps ===
+psql:/home/claude/safetystock/sql/003_profile_raw.sql:16: ERROR:  column "order_delivered_customer_date" does not exist
+LINE 2:   count(*) FILTER (WHERE COALESCE(order_delivered_customer_d...
+                                          ^
+=== 3. Contradiction: delivered status, no delivery timestamp ===
+psql:/home/claude/safetystock/sql/003_profile_raw.sql:20: ERROR:  column "order_status" does not exist
+LINE 2: WHERE order_status='delivered' AND COALESCE(order_delivered_...
+              ^
+=== 4. Timestamp ordering violations (delivered before dispatched) ===
+psql:/home/claude/safetystock/sql/003_profile_raw.sql:25: ERROR:  column "order_delivered_customer_date" does not exist
+LINE 2: WHERE order_delivered_customer_date <> '' AND order_delivere...
+              ^
+=== 5. Non-positive lead times ===
+psql:/home/claude/safetystock/sql/003_profile_raw.sql:30: ERROR:  column "order_delivered_customer_date" does not exist
+LINE 2: WHERE order_delivered_customer_date <> ''
+              ^
+=== 6. Monthly volume (is the period representative?) ===
+psql:/home/claude/safetystock/sql/003_profile_raw.sql:34: ERROR:  column "order_purchase_timestamp" does not exist
+LINE 1: SELECT to_char(order_purchase_timestamp::timestamp,'YYYY-MM'...
+                       ^
+=== 7. Products with no category ===
+psql:/home/claude/safetystock/sql/003_profile_raw.sql:37: ERROR:  column "product_category_name" does not exist
+LINE 1: SELECT count(*) FROM raw.products WHERE COALESCE(product_cat...
+                                                         ^
+=== 8. Is per-product demand thick enough for a standard deviation? ===
+psql:/home/claude/safetystock/sql/003_profile_raw.sql:45: ERROR:  relation "raw.order_items" does not exist
+LINE 1: ...uct AS (SELECT product_id, count(*) AS lines FROM raw.order_...
+                                                             ^
